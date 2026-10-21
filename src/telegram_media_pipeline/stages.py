@@ -44,6 +44,8 @@ class ChunkingStage(PipelineStage):
         self.max_chunk_size = max_chunk_size
 
     def calculate_chunks(self, total_size: int) -> List[ChunkInfo]:
+        if total_size < 0:
+            raise ValueError("File size cannot be negative")
         if total_size <= self.max_chunk_size:
             return [ChunkInfo(chunk_index=0, total_chunks=1, byte_start=0, byte_end=total_size, size_bytes=total_size)]
 

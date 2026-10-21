@@ -33,12 +33,18 @@ class MediaPipeline:
                 stage_name = stage.__class__.__name__
                 if progress_callback:
                     pct = int((idx / total_stages) * 100)
-                    progress_callback(stage_name, pct)
+                    try:
+                        progress_callback(stage_name, pct)
+                    except Exception:
+                        pass
 
                 current_item = await stage.process(current_item)
 
             if progress_callback:
-                progress_callback("Completed", 100)
+                try:
+                    progress_callback("Completed", 100)
+                except Exception:
+                    pass
 
             chunk_dicts = current_item.metadata.get("chunks", [])
             chunks = [ChunkInfo(**c) for c in chunk_dicts]
